@@ -1,0 +1,108 @@
+### Hotel Guest Review System - API Tests
+
+@baseUrl = http://localhost:8000/api/v1
+@token = 
+
+### Health Check
+GET http://localhost:8000/health
+
+### API Status
+GET {{baseUrl}}/status
+
+### Login as Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@grandhotel.ru",
+  "password": "admin123"
+}
+
+### Login as Manager
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "manager@grandhotel.ru",
+  "password": "manager123"
+}
+
+### Register New User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "test123",
+  "first_name": "Test",
+  "last_name": "User",
+  "role": "manager"
+}
+
+### Create Booking (with automatic risk check)
+POST {{baseUrl}}/bookings/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "hotel_id": "YOUR_HOTEL_ID",
+  "source": "booking.com",
+  "booking_external_id": "BK123456",
+  "guest_first_name": "Иван",
+  "guest_last_name": "Иванов",
+  "guest_phone": "+79161234567",
+  "guest_email": "ivan@example.com",
+  "checkin_date": "2026-04-01",
+  "checkout_date": "2026-04-05",
+  "room_type": "Standard",
+  "total_amount": 15000,
+  "currency": "RUB"
+}
+
+### Get Booking Details
+GET {{baseUrl}}/bookings/BOOKING_ID
+Authorization: Bearer {{token}}
+
+### List All Bookings
+GET {{baseUrl}}/bookings/?skip=0&limit=50
+Authorization: Bearer {{token}}
+
+### Get Guest Profile
+GET {{baseUrl}}/guests/GUEST_ID
+Authorization: Bearer {{token}}
+
+### List All Guests
+GET {{baseUrl}}/guests/?skip=0&limit=50
+Authorization: Bearer {{token}}
+
+### Create Review for Guest
+POST {{baseUrl}}/reviews/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "booking_id": "BOOKING_ID",
+  "rating": 4,
+  "comment": "Хороший гость, все в порядке",
+  "tags": [],
+  "damage_amount": null,
+  "unpaid_amount": null
+}
+
+### Create Negative Review
+POST {{baseUrl}}/reviews/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "booking_id": "BOOKING_ID",
+  "rating": 2,
+  "comment": "Повреждение мебели, шумное поведение",
+  "tags": ["property_damage", "noise"],
+  "damage_amount": 5000,
+  "unpaid_amount": null
+}
+
+### Get Guest Reviews
+GET {{baseUrl}}/reviews/guest/GUEST_ID
+Authorization: Bearer {{token}}
